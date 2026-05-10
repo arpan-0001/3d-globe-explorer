@@ -1,0 +1,56 @@
+/* TutorialScreen.css */
+.tutorial-screen {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 30px;
+  text-align: center;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+}
+
+.tutorial-screen h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.tutorial-screen p {
+  font-size: 1rem;
+  margin: 8px 0;
+  max-width: 600px;
+}
+
+/* === Responsive tweaks for small screens === */
+@media (max-width: 600px) {
+  .tutorial-screen {
+    padding: 20px;
+  }
+
+  .tutorial-screen h1 {
+    font-size: 1.5rem;
+  }
+
+  .tutorial-screen p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .tutorial-screen h1 {
+    font-size: 1.3rem;
+  }
+
+  .tutorial-screen p {
+    font-size: 0.85rem;
+  }
+}
