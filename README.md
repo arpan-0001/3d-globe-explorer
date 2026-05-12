@@ -1,16 +1,71 @@
-# React + Vite
+# 3D Globe Explorer 🌍
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive 3D globe application built using React and Three.js that allows users to explore countries around the world with detailed information and immersive visuals.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Live Demo
 
-## React Compiler
+https://3d-globe-explorer.vercel.app
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Interactive 3D globe
+- Country selection and highlighting
+- Country information sidebar
+- Smooth camera animations
+- Real-time country details
+- Responsive design
+- Mobile-friendly bottom panels
+- Globe and Solar System view switching
+
+---
+
+## 🛠️ Tech Stack
+
+- React.js
+- Three.js
+- React Globe GL
+- React Three Fiber
+- JavaScript
+- CSS
+- Vercel
+
+---
+
+## 📸 Screenshots
+
+<img width="1920" height="872" alt="Screenshot 2026-05-11 165434" src="https://github.com/user-attachments/assets/59bed6b1-9ad2-4efa-8a48-06583fd92618" />
+
+
+---
+
+## ⚙️ Installation
+
+```bash
+git clone https://github.com/arpan-0001/3d-globe-explorer.git
+
+cd 3d-globe-explorer
+
+npm install
+
+npm run dev
+```
+
+---
+
+## 🔮 Future Improvements
+
+- Search countries
+- Weather integration
+- Country comparison feature
+- Space exploration mode
+- Satellite visualization
+
+---
+
+## 👨‍💻 Author
+
+Arpan Debnath
