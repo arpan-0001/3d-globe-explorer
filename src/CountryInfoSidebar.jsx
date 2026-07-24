@@ -122,61 +122,65 @@ const CountryInfoSidebar = ({ country, onClose }) => {
         isMobile ? (
           <>
             {/* === MOBILE: Sliding panels === */}
-            <div
-              className="multi-slide-container"
-              ref={scrollRef}
-              onScroll={handleScroll}
-            >
-              <div className="slide-panel">
-                <h3>{data.name}</h3>
-                {data.flag && (
-                  <img src={data.flag} alt="flag" className="flag-img" />
-                )}
-              </div>
+   <div className="bottom-sheet-content">
 
-              <div className="slide-panel">
-                <p><strong>Capital:</strong> {data.capital}</p>
-                <p><strong>Region:</strong> {data.region}</p>
-                <p><strong>Population:</strong> {data.population.toLocaleString()}</p>
-                <p><strong>Languages:</strong> {data.languages}</p>
-              </div>
+  <div className="sheet-handle" />
 
-              <div className="slide-panel">
-                <p><strong>Timezone:</strong> {data.timezone}</p>
-                <p><strong>Date:</strong> {data.date}</p>
-                <p><strong>Local Time:</strong> {data.time}</p>
-                {data.weather ? (
-                  <p><strong>Weather:</strong> {data.weather.temp}°C, {data.weather.desc}</p>
-                ) : (
-                  <p><em>Weather unavailable</em></p>
-                )}
-              </div>
-            </div>
+  <h2>{data.name}</h2>
 
-            {/* Arrows */}
-            <button
-              className="arrow-btn arrow-left"
-              onClick={() => scrollToSlide(Math.max(activeSlide - 1, 0))}
-            >
-              ‹
-            </button>
-            <button
-              className="arrow-btn arrow-right"
-              onClick={() => scrollToSlide(Math.min(activeSlide + 1, 2))}
-            >
-              ›
-            </button>
+  {data.flag && (
+    <img
+      src={data.flag}
+      alt="flag"
+      className="flag-img"
+    />
+  )}
 
-            {/* Dots */}
-            <div className="dots">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className={`dot ${activeSlide === i ? 'active' : ''}`}
-                  onClick={() => scrollToSlide(i)}
-                />
-              ))}
-            </div>
+  <div className="info-row">
+    <span>🏛 Capital</span>
+    <strong>{data.capital}</strong>
+  </div>
+
+  <div className="info-row">
+    <span>🌎 Region</span>
+    <strong>{data.region}</strong>
+  </div>
+
+  <div className="info-row">
+    <span>👥 Population</span>
+    <strong>{data.population.toLocaleString()}</strong>
+  </div>
+
+  <div className="info-row">
+    <span>🗣 Languages</span>
+    <strong>{data.languages}</strong>
+  </div>
+
+  <div className="info-row">
+    <span>🕒 Timezone</span>
+    <strong>{data.timezone}</strong>
+  </div>
+
+  <div className="info-row">
+    <span>📅 Date</span>
+    <strong>{data.date}</strong>
+  </div>
+
+  <div className="info-row">
+    <span>⏰ Local Time</span>
+    <strong>{data.time}</strong>
+  </div>
+
+  {data.weather && (
+    <div className="info-row">
+      <span>☀ Weather</span>
+      <strong>
+        {data.weather.temp}°C · {data.weather.desc}
+      </strong>
+    </div>
+  )}
+
+</div>
           </>
         ) : (
           <>

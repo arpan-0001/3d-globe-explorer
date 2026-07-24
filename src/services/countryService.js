@@ -1,15 +1,36 @@
-// src/services/countryService.js
-import axios from 'axios';
+import countryInfo from "../data/countryInfo.json";
 
 export async function getCountryInfo(name) {
-  const res = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(name)}?fullText=true`);
-  const data = res.data[0];
-  return {
-    name: data.name.common,
-    capital: data.capital?.[0] || 'Unknown',
-    population: data.population,
-    region: data.region,
-    languages: Object.values(data.languages || {}).join(', '),
-    flag: data.flags?.svg
-  };
+  // Try exact match first
+  let country = countryInfo.find(
+    (c) => c.name.toLowerCase() === name.toLowerCase()
+  );
+
+  // Handle common name differences
+  if (!country) {
+    const aliases = {
+      "United States of America": "United States",
+      "Russian Federation": "Russia",
+      "Czech Republic": "Czechia",
+      "Republic of the Congo": "Congo",
+      "Democratic Republic of the Congo": "DR Congo",
+      "Ivory Coast": "Côte d'Ivoire",
+      "South Korea": "Korea",
+      "North Korea": "Korea",
+    };
+
+    const mappedName = aliases[name];
+
+    if (mappedName) {
+      country = countryInfo.find(
+        (c) => c.name.toLowerCase() === mappedName.toLowerCase()
+      );
+    }
+  }
+
+  if (!country) {
+    throw new Error(`Country "${name}" not found`);
+  }
+
+  return country;
 }

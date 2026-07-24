@@ -10,16 +10,22 @@ import TutorialScreen from './views/TutorialScreen';
 import './GlobeViewer.css';
 import worldData from './data/countries-110m.json';
 import CountryInfoSidebar from './CountryInfoSidebar';
+import { useMediaQuery } from "react-responsive";
 
 const GlobeViewer = () => {
   const globeEl = useRef();
   const cloudMeshRef = useRef();
+  const cloudsMovingRef = useRef(true);
+  const isMobile = useMediaQuery({ maxWidth: 600 });
 
   const [countryPolygons, setCountryPolygons] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [showPolygons, setShowPolygons] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentMode, setCurrentMode] = useState('Show Borders');
+const [showPolygons, setShowPolygons] = useState(!isMobile);
+
+const [currentMode, setCurrentMode] = useState(
+  isMobile ? "Hide Borders" : "Show Borders"
+);
 
   const [isTextureLoaded, setIsTextureLoaded] = useState(false);
   const [isCloudLoaded, setIsCloudLoaded] = useState(false);
@@ -27,6 +33,16 @@ const GlobeViewer = () => {
   const [isReadyToRender, setIsReadyToRender] = useState(false);
 
   const allModes = ['Show Borders', 'Hide Borders', 'Start Rotation', 'Stop Rotation'];
+
+  useEffect(() => {
+  if (isMobile) {
+    setShowPolygons(false);
+    setCurrentMode("Hide Borders");
+  } else {
+    setShowPolygons(true);
+    setCurrentMode("Show Borders");
+  }
+}, [isMobile]);
 
   useEffect(() => {
     const timer = setTimeout(() => setMinDelayPassed(true), 2000);
@@ -57,7 +73,7 @@ const GlobeViewer = () => {
         const cloudMaterial = new THREE.MeshPhongMaterial({
           map: cloudTexture,
           transparent: true,
-          opacity: 0.35,
+          opacity: 0.37,
           side: THREE.DoubleSide,
           depthWrite: false,
           blending: THREE.AdditiveBlending,
@@ -114,13 +130,15 @@ const GlobeViewer = () => {
     const ambientLight = new THREE.AmbientLight(0x222222);
     globe.scene().add(ambientLight);
 
-    const animate = () => {
-      requestAnimationFrame(animate);
-      if (cloudMeshRef.current) {
-        cloudMeshRef.current.rotation.y += 0.0004;
-      }
-    };
-    animate();
+   const animate = () => {
+  requestAnimationFrame(animate);
+
+  if (cloudMeshRef.current && cloudsMovingRef.current) {
+    cloudMeshRef.current.rotation.y += 0.0002;
+  }
+};
+
+animate();
   }, [isReadyToRender]);
 
   const handleCountryClick = (country) => {
@@ -128,29 +146,71 @@ const GlobeViewer = () => {
     if (!name) return;
     const [lng, lat] = geoCentroid(country);
     globeEl.current.controls().autoRotate = false;
+      cloudsMovingRef.current = false;
     globeEl.current.pointOfView({ lat, lng, altitude: 1.5 }, 1500);
     setSelectedCountry({ name, lat, lng });
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    const match = countryPolygons.find(
-      (c) => c.properties.name.toLowerCase() === searchQuery.toLowerCase()
+
+  
+const aliases = {
+  usa: "United States of America",
+  "united states": "United States of America",
+  america: "United States of America",
+  uk: "United Kingdom",
+  england: "United Kingdom",
+  uae: "United Arab Emirates",
+  "south korea": "Korea",
+  "north korea": "Dem. Rep. Korea",
+};
+
+
+
+const handleSearch = (e) => {
+  e.preventDefault();
+
+  let query = searchQuery.trim().toLowerCase();
+
+  if (!query) return;
+
+  // Convert aliases to the official map names
+  if (aliases[query]) {
+    query = aliases[query].toLowerCase();
+  }
+
+  const match = countryPolygons.find((c) => {
+    const name = c.properties.name.toLowerCase();
+
+    return (
+      name === query ||
+      name.includes(query) ||
+      query.includes(name)
     );
-    if (match) {
-      const [lng, lat] = geoCentroid(match);
-      globeEl.current.controls().autoRotate = false;
-      globeEl.current.pointOfView({ lat, lng, altitude: 1.5 }, 1500);
-      setSelectedCountry({ name: match.properties.name, lat, lng });
-    } else {
-      alert('Country not found.');
-    }
-  };
+  });
+
+  if (match) {
+    const [lng, lat] = geoCentroid(match);
+
+    globeEl.current.controls().autoRotate = false;
+    globeEl.current.pointOfView(
+      { lat, lng, altitude: 1.5 },
+      1500
+    );
+
+    setSelectedCountry({
+      name: match.properties.name,
+      lat,
+      lng,
+    });
+  } else {
+    alert("Country not found.");
+  }
+};
 
   const handleCloseSidebar = () => {
     setSelectedCountry(null);
     globeEl.current.controls().autoRotate = true;
+     cloudsMovingRef.current = true;
     globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.5 }, 1500);
   };
 
@@ -164,12 +224,15 @@ const GlobeViewer = () => {
       case 'Show Borders':
         setShowPolygons(true);
         break;
-      case 'Start Rotation':
-        globeEl.current.controls().autoRotate = true;
-        break;
-      case 'Stop Rotation':
-        globeEl.current.controls().autoRotate = false;
-        break;
+    case 'Start Rotation':
+  globeEl.current.controls().autoRotate = true;
+  cloudsMovingRef.current = true;
+  break;
+
+case 'Stop Rotation':
+  globeEl.current.controls().autoRotate = false;
+  cloudsMovingRef.current = false;
+  break;
       default:
         break;
     }
